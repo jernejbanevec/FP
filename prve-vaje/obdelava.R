@@ -19,3 +19,13 @@ podatki_2010 <- data.frame(podatki_2010)[-1,]
 colnames(podatki_2008) <- c('1w', '2w', '3w', '1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m')
 colnames(podatki_2009) <- c('1w', '2w', '3w', '1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m')
 colnames(podatki_2010) <- c('1w', '2w', '3w', '1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m')
+
+#Združimo podatke z rbind in narišemo graf(T = 6, U = 12)
+
+podatki_euribor <- rbind(podatki_2008, podatki_2009, podatki_2010)
+
+imena = c('6-mesečna obrestna mera', '12-mesečna obrestna mera')
+casovna_vrsta1 <- ts(podatki_euribor$`6m`, start= c(2008, 1), frequency = 12)
+casovna_vrsta2 <- ts(podatki_euribor$`12m`, start= c(2008, 1), frequency = 12)
+graf_obrestnih_mer <- ts.plot(casovna_vrsta1, casovna_vrsta2, xlab='Leto', ylab ='Obrestna mera', main = '6-mesečna in 12-mesečna obrestna mera',col = c("blue","red"), lwd = 2)
+legend('bottomright', imena, lty = 1, col = c("blue","red"), lwd = 3)
