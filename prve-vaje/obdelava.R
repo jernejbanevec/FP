@@ -71,8 +71,29 @@ legend('topright', imena, lty = 1, col = c("blue","red"), lwd = 3)
 
 
 # DRUGA NALOGA
-#podatki_euribor_preurejeni <- podatki_euribor
+podatki_euribor_preurejeni <- podatki_euribor
 #colnames(podatki_euribor_preurejeni) <- c(0.23, 0.46, 0.69, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
 #colnames(podatki_euribor_preurejeni) <- c('0.23m', '0.46m', '0.69m', '1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m')
-#podatki_euribor_preurejeni <- data.frame(t(podatki_euribor_preurejeni))
+podatki_euribor_preurejeni <- data.frame(t(podatki_euribor_preurejeni))
+#colnames(podatki_euribor_preurejeni) <- c('0.23m', '0.46m', '0.69m', '1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m')
 #podatki_euribor_preurejeni$DOSPETJE <- c(0.23, 0.46, 0.69, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+
+# Zanimivi datumi so 1.2.2008, 1.10.2008 in 2.1.2009
+podatki_euribor_preurejeni <- podatki_euribor_preurejeni[c(2, 10, 13)]
+tedni_v_mesecih <- c(0.23, 0.47, 0.73, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+novi_podatki <- cbind(tedni_v_mesecih, podatki_euribor_preurejeni)
+imena2 = c("1.2.2008", "1.10.2008", "2.1.2009")
+graf_zanimiv <- plot(y = novi_podatki[,c(2)], 
+                     x = tedni_v_mesecih, 
+                     type = "o", 
+                     main = "Struktura euribora",
+                     ylim = c(min(0), max(6)),
+                     xlab = "Čas dospetja", ylab = "Obrestna mera glede na dospetje")
+lines(novi_podatki$tedni_v_mesecih, col = "green", novi_podatki$X1.02.2008, type = "o", text(10, 4.8,"1.2.2008", col = "green"))
+lines(novi_podatki$tedni_v_mesecih, col = "red", novi_podatki$X1.10.2008, type = "o", text(10, 5.8, "1.10.2008", col = "red"))
+lines(novi_podatki$tedni_v_mesecih, col = "brown", novi_podatki$X2.01.2009, type = "o", text(10, 3.4, "2.1.2009", col = "brown"))
+#To sem uporabljal ko sem poskušal narisati graf z uporabo ts.plot
+#vrsta1 <- ts(novi_podatki$X1.02.2008, frequency = 15)
+#vrsta2 <- ts(novi_podatki$X1.10.2008, frequency = 15)
+#vrsta3 <- ts(novi_podatki$X2.01.2009, frequency = 15)
+
