@@ -50,35 +50,23 @@ podatki_euribor$`11m` <- parse_number(podatki_euribor$`11m`)
 podatki_euribor$`12m` <- parse_number(podatki_euribor$`12m`)
 
 
-#podatki_euribor$`3w` <- parse_vector(podatki_euribor$`3w`)
-#podatki_euribor$`1m` <- parse_vector(podatki_euribor$`1m`)
-#podatki_euribor$`2m` <- parse_vector(podatki_euribor$`2m`)
-#podatki_euribor$`3m` <- parse_vector(podatki_euribor$`3m`)
-#podatki_euribor$`4m` <- parse_vector(podatki_euribor$`4m`)
-#podatki_euribor$`5m` <- parse_vector(podatki_euribor$`5m`)
-#podatki_euribor$`6m` <- parse_vector(podatki_euribor$`6m`)
-#podatki_euribor$`7m` <- parse_vector(podatki_euribor$`7m`)
-#podatki_euribor$`8m` <- parse_vector(podatki_euribor$`8m`)
-#podatki_euribor$`9m` <- parse_vector(podatki_euribor$`9m`)
-#podatki_euribor$`10m` <- parse_vector(podatki_euribor$`10m`)
-#podatki_euribor$`11m` <- parse_vector(podatki_euribor$`11m`)
-#podatki_euribor$`12m` <- parse_vector(podatki_euribor$`12m`)
 imena = c("6 - mesecna", "12 - mesecna")
 casovna_vrsta1 <- ts(podatki_euribor$`6m`, start= c(2008, 1), frequency = 12)
 casovna_vrsta2 <- ts(podatki_euribor$`12m`, start= c(2008, 1), frequency = 12)
-graf_obrestnih_mer <- ts.plot(casovna_vrsta1, casovna_vrsta2, xlab='Leto', ylab ="Obrestna mera v odstotkih", main = "6-mesecna in 12-mesecna obrestna mera",col = c("blue","red"), lwd = 2)
+graf_obrestnih_mer <- ts.plot(casovna_vrsta1, 
+                              casovna_vrsta2, 
+                              xlab='Leto', ylab ="Obrestna mera v odstotkih", 
+                              main = "6-mesecna in 12-mesecna obrestna mera",
+                              col = c("blue","red"), 
+                              lwd = 2)
 legend('topright', imena, lty = 1, col = c("blue","red"), lwd = 3)
 
 
 # DRUGA NALOGA
 podatki_euribor_preurejeni <- podatki_euribor
-#colnames(podatki_euribor_preurejeni) <- c(0.23, 0.46, 0.69, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-#colnames(podatki_euribor_preurejeni) <- c('0.23m', '0.46m', '0.69m', '1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m')
 podatki_euribor_preurejeni <- data.frame(t(podatki_euribor_preurejeni))
-#colnames(podatki_euribor_preurejeni) <- c('0.23m', '0.46m', '0.69m', '1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m')
-#podatki_euribor_preurejeni$DOSPETJE <- c(0.23, 0.46, 0.69, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
 
-# Zanimivi datumi so 1.2.2008, 1.10.2008 in 2.1.2009
+# Zanimivi datumi so po mojem mnenju 1.2.2008, 1.10.2008 in 2.1.2009
 podatki_euribor_preurejeni <- podatki_euribor_preurejeni[c(2, 10, 13)]
 tedni_v_mesecih <- c(0.23, 0.47, 0.73, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
 novi_podatki <- cbind(tedni_v_mesecih, podatki_euribor_preurejeni)
@@ -89,11 +77,13 @@ graf_zanimiv <- plot(y = novi_podatki[,c(2)],
                      main = "Struktura euribora",
                      ylim = c(min(0), max(6)),
                      xlab = "Čas dospetja", ylab = "Obrestna mera glede na dospetje")
-lines(novi_podatki$tedni_v_mesecih, col = "green", novi_podatki$X1.02.2008, type = "o", text(10, 4.8,"1.2.2008", col = "green"))
-lines(novi_podatki$tedni_v_mesecih, col = "red", novi_podatki$X1.10.2008, type = "o", text(10, 5.8, "1.10.2008", col = "red"))
-lines(novi_podatki$tedni_v_mesecih, col = "brown", novi_podatki$X2.01.2009, type = "o", text(10, 3.4, "2.1.2009", col = "brown"))
-#To sem uporabljal ko sem poskušal narisati graf z uporabo ts.plot
-#vrsta1 <- ts(novi_podatki$X1.02.2008, frequency = 15)
-#vrsta2 <- ts(novi_podatki$X1.10.2008, frequency = 15)
-#vrsta3 <- ts(novi_podatki$X2.01.2009, frequency = 15)
+lines(novi_podatki$tedni_v_mesecih, col = "green", novi_podatki$X1.02.2008, type = "o", pch = 19, text(10, 4.8,"1.2.2008", col = "green"))
+lines(novi_podatki$tedni_v_mesecih, col = "red", novi_podatki$X1.10.2008, type = "o", pch = 19, text(10, 5.8, "1.10.2008", col = "red"))
+lines(novi_podatki$tedni_v_mesecih, col = "brown", novi_podatki$X2.01.2009, type = "o", pch = 19, text(10, 3.4, "2.1.2009", col = "brown"))
 
+#tukaj pri pch izberem najlepšo obliko oznak, kar v tem primeru predstavljajo pike ()
+# Utemelitve
+## Po rahlem padcu v začetku leta 2008 opazimo naraščanje obrestne mere, katera v začetku narašča tudi glede na dospetje. Vendar to le za dospetja do treh mesecev,
+## kar prikazuje slabo mnenje o prihodnji finančni situaciji. Euribor tako narašča, kar vodi do rekordne vrednosti oktobra 2008, kjer narašča sorazmerno z dospetjem.
+## Po velikem padcu doseže euribor z letom 2009 skoraj polovično vrednost svoje največje vrednosti (oktober 2008). Tudi v tem času euribor narašča glede na dospetje,
+## največji poskok pa je opaziti v časih dospetja do dveh let.
