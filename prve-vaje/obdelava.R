@@ -65,7 +65,7 @@ legend('topright', imena, lty = 1, col = c("blue","red"), lwd = 3)
 # DRUGA NALOGA
 podatki_euribor_preurejeni <- podatki_euribor
 podatki_euribor_preurejeni <- data.frame(t(podatki_euribor_preurejeni))
-
+podatki_shranjeni <- podatki_euribor_preurejeni #Shranim si podatke za tretju nalogo
 # Zanimivi datumi so po mojem mnenju 1.2.2008, 1.10.2008 in 2.1.2009
 podatki_euribor_preurejeni <- podatki_euribor_preurejeni[c(2, 10, 13)]
 tedni_v_mesecih <- c(0.23, 0.47, 0.73, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
@@ -81,9 +81,22 @@ lines(novi_podatki$tedni_v_mesecih, col = "green", novi_podatki$X1.02.2008, type
 lines(novi_podatki$tedni_v_mesecih, col = "red", novi_podatki$X1.10.2008, type = "o", pch = 19, text(10, 5.8, "1.10.2008", col = "red"))
 lines(novi_podatki$tedni_v_mesecih, col = "brown", novi_podatki$X2.01.2009, type = "o", pch = 19, text(10, 3.4, "2.1.2009", col = "brown"))
 
-#tukaj pri pch izberem najlepšo obliko oznak, kar v tem primeru predstavljajo pike ()
+#tukaj pri pch izberem najlepšo obliko oznak, kar v tem primeru predstavljajo pike ( dobra je tudi pch = 16)
 # Utemelitve
 ## Po rahlem padcu v začetku leta 2008 opazimo naraščanje obrestne mere, katera v začetku narašča tudi glede na dospetje. Vendar to le za dospetja do treh mesecev,
 ## kar prikazuje slabo mnenje o prihodnji finančni situaciji. Euribor tako narašča, kar vodi do rekordne vrednosti oktobra 2008, kjer narašča sorazmerno z dospetjem.
 ## Po velikem padcu doseže euribor z letom 2009 skoraj polovično vrednost svoje največje vrednosti (oktober 2008). Tudi v tem času euribor narašča glede na dospetje,
 ## največji poskok pa je opaziti v časih dospetja do dveh let.
+
+
+
+#TRETJA NALOGA
+#a) T = 6, U = 12
+napoved <- c(0)
+podatki_tretja_naloga <- cbind(podatki_shranjeni, napoved) #Ustvarimo novo tabelo, kjer bomo v stolpec "napoved" shranjevali izračunane napovedi
+
+i <- 1
+while i < 16 {
+  
+  
+}
