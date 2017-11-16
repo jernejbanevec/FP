@@ -136,5 +136,14 @@ odst_995 <- VaR(porazdelitvena, 0.995)
 izpad_005 <- CTE(porazdelitvena, 0.005)
 
 
-
-
+## TRETJA NALOGA
+#simulacija <- vector("numeric", length=10)
+reps <- 10000
+npois <- 1
+lambda_pois <- 15
+npareto1 <- 1
+set.seed(0)
+system.time(
+  simulacija <- replicate(reps, rpois(lambda = lambda_pois), rpareto1( shape = alfa, min = x_m))
+)
+# NE DELUJE ŠE, NE POGANJAJ
