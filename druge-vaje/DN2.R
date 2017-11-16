@@ -66,7 +66,8 @@ Var_Y <- Inf #Vrednost je neskončno, saj je alfa v našem primeru < 2
 E_N <- 15 #Upanje poisonove z lambda = 15
 E_S <- E_Y * E_N
 Var_S <- Inf #Saj je v vsoti tudi Var_Y pomnožena z nečim pozitivnim
-
+Var_N <- 15
+  
 ##DRUGA NALOGA
 #a)
 
@@ -125,12 +126,15 @@ vrednosti <- knots(stopnice) + 0.50
 verjetnosti <- diff(diffinv(dis_pareto))
 
 upanje <- (vrednosti %*% verjetnosti) * 15 #to je skalarni produkt, E[N] = 15
-razdalja <- vrednosti - E_Y #to je uredu zaradi krožnega dopolnjevanja
-varianca <- (razdalja * razdalja) %*% verjetnosti
+razdalja <- vrednosti - E_Y                #to je uredu zaradi krožnega dopolnjevanja
+varianca_Y <- (razdalja * razdalja) %*% verjetnosti #tu sem poračunal vzorčno varianco meritve
+varianca_S <- E_N * varianca_Y + E_Y * Var_N
 
 #e)
 
 odst_995 <- VaR(porazdelitvena, 0.995)
 izpad_005 <- CTE(porazdelitvena, 0.005)
+
+
 
 
