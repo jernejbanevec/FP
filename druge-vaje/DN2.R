@@ -158,8 +158,10 @@ ocena_varianca <- var(sim_S)
 #elemente sortiram in poberem 9950-ti največji element -> izpustim torej 99,5% ostalih, ki so manjši
 ocena_odst_995 <- sort(sim_S)[9950]
 
-#ocena_izp_005 <- 0
-#for (i in 9951:10000){
-#  ocena_izp_005 <- ocena_izp_005 + sort(sim_S)[i]
-#}
-#ocena_izp_005 <- ocena_izp_005 * 0.0025
+ocena_izpad_005 <- 0
+for (i in 9951:10000){
+  i_ti_element <- sort(sim_S)[i]
+  predhodki_i <- sort(sim_S)[i-1]
+  ocena_izpad_005 <- ocena_izpad_005 + i_ti_element * ((1 - ecdf(sim_S)(predhodki_i)) - (1 - ecdf(sim_S)(i_ti_element)))
+}
+
