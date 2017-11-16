@@ -121,14 +121,13 @@ plot(porazdelitvena) #Nariše graf - NAROBE!!!
 #d)
 
 #tu je S diskretna slučajna spremenljivka
-vrednosti <- knots(stopnice) + 0.50
+vrednosti <- knots(porazdelitvena)
 #vrednosti <- 0.5 * (2 * vrednosti1 + 1)
-verjetnosti <- diff(diffinv(dis_pareto))
+verjetnosti <- diff(porazdelitvena)
 
-upanje <- (vrednosti %*% verjetnosti) * 15 #to je skalarni produkt, E[N] = 15
-razdalja <- vrednosti - E_Y                #to je uredu zaradi krožnega dopolnjevanja
-varianca_Y <- (razdalja * razdalja) %*% verjetnosti #tu sem poračunal vzorčno varianco meritve
-varianca_S <- E_N * varianca_Y + E_Y * Var_N
+upanje_S <- vrednosti %*% verjetnosti #to je skalarni produkt
+varianca_S <- (vrednosti * vrednosti) %*% verjetnosti - upanje^2 # Var(S) = E[S^2] - E[S]^2
+
 
 #e)
 
@@ -137,13 +136,30 @@ izpad_005 <- CTE(porazdelitvena, 0.005)
 
 
 ## TRETJA NALOGA
-#simulacija <- vector("numeric", length=10)
-reps <- 10000
-npois <- 1
-lambda_pois <- 15
-npareto1 <- 1
-set.seed(0)
-system.time(
-  simulacija <- replicate(reps, rpois(lambda = lambda_pois), rpareto1( shape = alfa, min = x_m))
-)
-# NE DELUJE ŠE, NE POGANJAJ
+
+#a)
+sim_N <- rpois(10000, 15)
+
+sim_S <- c()
+for (i in sim_N){
+  sim_S <- c(sim_S, sum(rpareto1(i, alfa, x_m)))
+}
+
+#b)
+
+ocena_upanje <- mean(sim_S)
+ocena_varianca <- var(sim_S)
+  
+# V primerjavi z nalogo 2.d, dobim tokrat boljše pribljižke tako za upanje s.s S, kot za 
+# varianco s.s. S. Tako je zato, ker je vzorec nekoliko večji (10000) kot prej (130).
+
+#c)
+
+#elemente sortiram in poberem 9950-ti največji element -> izpustim torej 99,5% ostalih, ki so manjši
+ocena_odst_995 <- sort(sim_S)[9950]
+
+#ocena_izp_005 <- 0
+#for (i in 9951:10000){
+#  ocena_izp_005 <- ocena_izp_005 + sort(sim_S)[i]
+#}
+#ocena_izp_005 <- ocena_izp_005 * 0.0025
