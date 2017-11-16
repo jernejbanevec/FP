@@ -73,16 +73,24 @@ Var_S <- Inf #Saj je v vsoti tudi Var_Y pomnožena z nečim pozitivnim
 h <- 0.5
 n <- 80  #število korakov
 
-dis_pareto <- diffinv(discretize(ppareto1(x, alfa, x_m),
+dis_pareto <- discretize(ppareto1(x, alfa, x_m),
                          from = 0,
                          to = 40,
-                         step = h))
+                         step = h)
 
-#diffinf nam da porazdelitveno funkcijo
+kumulativna_dis_pareto <- discretize(ppareto1(x, alfa, x_m),
+                         from = 0,
+                         to = 100000,
+                         step = h) 
+
+#tu definiram kumulativno_dis_pareto, 
+#ki jo uporabim da dobim boljšo kumulativno porazdelitveno funkcijo s panjarjevim algoritmom
 
 #b)
+
+#diffinf nam da porazdelitveno funkcijo
 stopnice <- stepfun(seq(0, 39.5, by = h), 
-                    dis_pareto)
+                    diffinv(dis_pareto))
 
 plot(stopnice,
      col = "orange",
@@ -99,24 +107,30 @@ curve(ppareto1(x, alfa, x_m),
 #c)
 
 porazdelitvena <- aggregateDist(method = "recursive", 
-                                model.freq = "poisson", 
-                                model.sev = diff(dis_pareto), #diff nam da višino skoka (boljše predstavlja verjetnost)
+                                model.freq = "pois", 
+                                model.sev = kumulativna_dis_pareto, #diff nam da višino skoka (boljše predstavlja verjetnost)
                                 lambda = 15,
-                                p0 = NULL,
-                                x.scale = h)
+                                convolve = 0,
+                                p0 = exp(-15),
+                                x.scale = h,
+                                maxit = 1000000,
+                                tol = 0.002)
 plot(porazdelitvena) #Nariše graf - NAROBE!!!
 
 #d)
 
 #tu je S diskretna slučajna spremenljivka
-vrednosti1 <- knots(stopnice)
-vrednosti <- 0.5 * (2 * vrednosti + 1)
-verjetnosti <- diff(dis_pareto)
+vrednosti <- knots(stopnice) + 0.50
+#vrednosti <- 0.5 * (2 * vrednosti1 + 1)
+verjetnosti <- diff(diffinv(dis_pareto))
 
-upanje <- (vrednosti %*% verjetnosti) * 15 #to je skalarni produkt
+upanje <- (vrednosti %*% verjetnosti) * 15 #to je skalarni produkt, E[N] = 15
 razdalja <- vrednosti - E_Y #to je uredu zaradi krožnega dopolnjevanja
 varianca <- (razdalja * razdalja) %*% verjetnosti
 
 #e)
 
-odst_95 <- VaR(porazdelitvena)[2]
+odst_995 <- VaR(porazdelitvena, 0.995)
+izpad_005 <- CTE(porazdelitvena, 0.005)
+
+
