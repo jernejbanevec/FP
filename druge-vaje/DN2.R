@@ -116,7 +116,7 @@ porazdelitvena <- aggregateDist(method = "recursive",
                                 x.scale = h,
                                 maxit = 1000000,
                                 tol = 0.002)
-plot(porazdelitvena) #Nariše graf - NAROBE!!!
+plot(porazdelitvena) #Nariše graf 
 
 #d)
 
@@ -158,10 +158,28 @@ ocena_varianca <- var(sim_S)
 #elemente sortiram in poberem 9950-ti največji element -> izpustim torej 99,5% ostalih, ki so manjši
 ocena_odst_995 <- sort(sim_S)[9950]
 
+# Najverjetneje malo zgrešen algoritem, saj vrača precej različno vrednost kot tista iz Pajnarjevega algoritma,
+# pozneje sem sicer ugovotil, da tega ni v navodilih vendar kljub temu obdržim, če bom mogoče potreboval v kakšni
+# poznejši domači nalogi.
+
 ocena_izpad_005 <- 0
 for (i in 9951:10000){
   i_ti_element <- sort(sim_S)[i]
   predhodki_i <- sort(sim_S)[i-1]
   ocena_izpad_005 <- ocena_izpad_005 + i_ti_element * ((1 - ecdf(sim_S)(predhodki_i)) - (1 - ecdf(sim_S)(i_ti_element)))
+  print(ocena_izpad_005)
 }
 
+
+#d)
+plot(porazdelitvena)
+plot(ecdf(sim_S),
+     col = 'green',
+     add = TRUE,
+     lwd = 2)
+legend('bottomright', 
+       legend = c('Panjerjev algoritem', 'Monte Carlo simulacija'),
+       col = c('black', 'green'),
+       lty = 1:1, 
+       bty = "n", #Nam vrne legendo brez obrob kot v zgledu
+       lwd = 2)
