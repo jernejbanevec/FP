@@ -36,7 +36,7 @@ izplacilo <- function(vrsta, T, type){
   if (type == "call") {
     return(max( max(vrsta[(T+1):length(vrsta)]- max(vrsta[1:T])), 0))
   } else if (type == "put"){
-    return(max(abs(min(vrsta[(T+1):length(vrsta)]) - min(vrsta[1:T])), 0))
+    return(max((min(vrsta[(T+1):length(vrsta)]) - min(vrsta[1:T])), 0))
   } else {return("Pazi na vpis tipa!")}
 }
 
@@ -47,9 +47,20 @@ izplacilo <- function(vrsta, T, type){
 binomski <- function(S0,u,d,U,R,T,type){
   
   q <- (1+R-d)/(u-d)
-  razpleti <- hcube(c(rep(2, U)),translation = -1)
-  verjetnosti_razpleti <- q**(1-razpleti)*(1-q)**razpleti
-  razpredelnica <- data.frame(rep(0, 2**U))
-  colnames(razpredelnica) <- c("Verjetnosti")
-  #verjetnosti <- q ** rowSums(razpleti) * (1-q)
+  
+  razpleti <- hcube(c(rep(2, U)),translation = -1) # Hiperkocko prelikoamo z -1, kjer potem dobimo 1 za up in 0 za down
+  dobicek_razpleti <- d ** (1-razpleti) * u ** razpleti # Dobimo vrednosti koeficienta za S0
+  dobicek_razpleti <- t(apply(dobicek_razpleti,1, cumprod)) #funkcijo uporabimo na prejšnjih parametrih (kolikšeno je obrestovanje)
+  
+  obdobje <- U
+  k <- rowSums(razpleti)
+  verjetnosti <- q ** k * (1-q) ** (obdobje - k) #Verjetnosti razpletov
+  
+  vrednosti <- cbind(S0, S0 * dobicek_razpleti) 
+  izplacila <- apply(vrednosti, 1, function(x) izplacilo(x,T,type)) #uporabimo dano funkcijo iz 1.b
+  
+  upanje <- (izplacila %*% verjetnosti)
+  return( upanje / ((1+R)**U) )
+  
 }
+
