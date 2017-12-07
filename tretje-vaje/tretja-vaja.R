@@ -69,5 +69,48 @@ binomski <- function(S0,u,d,U,R,T,type){
 monte <- function(S0,u,d,U,R,T,type,N){
   
   q <- (1+R-d)/(u-d)
+  empiricno <- matrix(rbinom(N*U, 1, q), N, U) #Naredimo matriko iz nakljucnih 1 in 0 (P(0) = q)
+  dobicek_razpleti <- d ** (1-empiricno) * u ** empiricno
+  dobicek_razpleti <- t(apply(dobicek_razpleti,1, cumprod)) #funkcijo uporabimo na prejšnjih parametrih (kolikšeno je obrestovanje)
+  
+  vrednosti <- cbind(S0, S0 * dobicek_razpleti) 
+  izplacila <- apply(vrednosti, 1, function(x) izplacilo(x,T,type)) #uporabimo dano funkcijo iz 1.b
+  
+  upanje <- mean(izplacila)
+  return( upanje / (1+R)**U )
+  
   
 }
+
+#Simuliranje vrednosti
+sim1 <- monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 10)
+sim2 <- monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 100)
+sim3 <- monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 1000)
+
+
+## TRETJA NALOGA
+
+#a)
+
+N1 <- c() 
+N2 <- c()
+N3 <- c()
+
+M <- 100 #število ponovitev
+
+for (i in c(1:M)){
+  
+  N1 <- c(N1, monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 10))
+  N2 <- c(N2, monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 100))
+  N3 <- c(N3, monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 1000))
+  
+}
+
+# HISTOGRAMI
+histogram_N1 <- hist(N1,
+                    breaks = 20 
+                    main = "Histogram odskodnin",
+                    xlab = "Visina odskodnine",
+                    ylab = "Verjetnost",
+                    col = "brown")
+#legend('topright', "Paretova porazdelitev", lty = 1, col = "blue", lwd = 3)
