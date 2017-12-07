@@ -64,3 +64,10 @@ binomski <- function(S0,u,d,U,R,T,type){
   
 }
 
+#b)
+
+monte <- function(S0,u,d,U,R,T,type,N){
+  
+  q <- (1+R-d)/(u-d)
+  
+}
