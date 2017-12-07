@@ -48,13 +48,13 @@ binomski <- function(S0,u,d,U,R,T,type){
   
   q <- (1+R-d)/(u-d)
   
-  razpleti <- hcube(c(rep(2, U)),translation = -1) # Hiperkocko prelikoamo z -1, kjer potem dobimo 1 za up in 0 za down
-  dobicek_razpleti <- d ** (1-razpleti) * u ** razpleti # Dobimo vrednosti koeficienta za S0
-  dobicek_razpleti <- t(apply(dobicek_razpleti,1, cumprod)) #funkcijo uporabimo na prejšnjih parametrih (kolikšeno je obrestovanje)
+  razpleti <- hcube(c(rep(2, U)),translation = -1)                # Hiperkocko preoblikujemo z -1, kjer potem dobimo 1 za up in 0 za down
+  dobicek_razpleti <- d ** (1-razpleti) * u ** razpleti           # Dobimo vrednosti koeficienta za S0
+  dobicek_razpleti <- t(apply(dobicek_razpleti,1, cumprod))       #funkcijo uporabimo na prejšnjih parametrih (kolikšeno je obrestovanje)
   
   obdobje <- U
   k <- rowSums(razpleti)
-  verjetnosti <- q ** k * (1-q) ** (obdobje - k) #Verjetnosti razpletov
+  verjetnosti <- q ** k * (1-q) ** (obdobje - k)                  #Verjetnosti razpletov
   
   vrednosti <- cbind(S0, S0 * dobicek_razpleti) 
   izplacila <- apply(vrednosti, 1, function(x) izplacilo(x,T,type)) #uporabimo dano funkcijo iz 1.b
@@ -107,10 +107,15 @@ for (i in c(1:M)){
 }
 
 # HISTOGRAMI
+# N1
+
+
+
 histogram_N1 <- hist(N1,
-                    breaks = 20 
-                    main = "Histogram odskodnin",
-                    xlab = "Visina odskodnine",
-                    ylab = "Verjetnost",
-                    col = "brown")
+                     breaks = 20, 
+                     main = "Monte Carlo: N = 10",
+                     xlab = "Premija",
+                     ylab = "Pogostost",
+                     col = "yellow")
+
 #legend('topright', "Paretova porazdelitev", lty = 1, col = "blue", lwd = 3)
