@@ -106,10 +106,14 @@ for (i in c(1:M)){
   
 }
 
+premija.opcije <- binomski(60,1.05,0.95,15,0.01,8,"put") #premije dobljena z binomksim modelom
+
 # HISTOGRAMI
 # N1
 
 
+povprecje_N1 <- mean(N1)
+odklon_N1 <- sqrt(var(N1))
 
 histogram_N1 <- hist(N1,
                      breaks = 20, 
@@ -117,5 +121,6 @@ histogram_N1 <- hist(N1,
                      xlab = "Premija",
                      ylab = "Pogostost",
                      col = "yellow")
-
+abline(v = povprecje_N1, col = "green")
+abline(v = premija.opcije, col = "red")
 #legend('topright', "Paretova porazdelitev", lty = 1, col = "blue", lwd = 3)
