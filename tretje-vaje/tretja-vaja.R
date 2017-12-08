@@ -40,6 +40,8 @@ izplacilo <- function(vrsta, T, type){
   } else {return("Pazi na vpis tipa!")}
 }
 
+#===================================================================================================
+
 ## DRUGA NALOGA
 
 #a) 
@@ -88,9 +90,11 @@ sim2 <- monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 100)
 sim3 <- monte(60, 1.05, 0.95, 15, 0.01, 8, "put", 1000)
 
 
+#===================================================================================================
+
 ## TRETJA NALOGA
 
-#a)
+#a in b)
 
 N1 <- c() 
 N2 <- c()
@@ -119,8 +123,57 @@ histogram_N1 <- hist(N1,
                      breaks = 20, 
                      main = "Monte Carlo: N = 10",
                      xlab = "Premija",
+                     xlim = c(0,10),
                      ylab = "Pogostost",
                      col = "yellow")
-abline(v = povprecje_N1, col = "green")
-abline(v = premija.opcije, col = "red")
-#legend('topright', "Paretova porazdelitev", lty = 1, col = "blue", lwd = 3)
+abline(v = povprecje_N1, col = "green", lwd = 2)
+abline(v = premija.opcije, col = "red", lty = 3, lwd = 2)
+arrows(povprecje_N1, 0, povprecje_N1 + odklon_N1, 0, lwd = 2, col = "green", length = 0.1)
+arrows(povprecje_N1, 0, povprecje_N1 - odklon_N1, 0, lwd = 2, col = "green", length = 0.1)
+legend('topright', c("Monte Carlo", "Analiza modela"), lty = c(1, 3), col = c("green","red"), lwd = 2)
+
+# N2
+
+
+povprecje_N2 <- mean(N2)
+odklon_N2 <- sqrt(var(N2))
+
+histogram_N2 <- hist(N2,
+                     breaks = 20, 
+                     main = "Monte Carlo: N = 100",
+                     xlab = "Premija",
+                     xlim = c(0,10),
+                     ylab = "Pogostost",
+                     col = "yellow")
+abline(v = povprecje_N2, col = "green", lwd = 2)
+abline(v = premija.opcije, col = "red", lty = 3, lwd = 2)
+arrows(povprecje_N2, 0, povprecje_N2 + odklon_N2, 0, lwd = 2, col = "green", length = 0.1)
+arrows(povprecje_N2, 0, povprecje_N2 - odklon_N2, 0, lwd = 2, col = "green", length = 0.1)
+legend('topright', c("Monte Carlo", "Analiza modela"), lty = c(1, 3), col = c("green","red"), lwd = 2)
+
+
+# N3
+
+
+povprecje_N3 <- mean(N3)
+odklon_N3 <- sqrt(var(N3))
+
+histogram_N3 <- hist(N3,
+                     breaks = 20, 
+                     main = "Monte Carlo: N = 1000",
+                     xlab = "Premija",
+                     xlim = c(0,10),
+                     ylab = "Pogostost",
+                     col = "yellow")
+abline(v = povprecje_N3, col = "green", lwd = 2)
+abline(v = premija.opcije, col = "red", lty = 3, lwd = 2)
+arrows(povprecje_N3, 0, povprecje_N3 + odklon_N3, 0, lwd = 2, col = "green", length = 0.1)
+arrows(povprecje_N3, 0, povprecje_N3 - odklon_N3, 0, lwd = 2, col = "green", length = 0.1)
+legend('topright', c("Monte Carlo", "Analiza modela"), lty = c(1, 3), col = c("green","red"), lwd = 2)
+
+
+
+
+
+
+
