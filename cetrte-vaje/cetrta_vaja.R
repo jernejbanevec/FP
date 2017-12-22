@@ -25,8 +25,8 @@ graf_gold <- ts.plot(casovna_vrsta,
 G <- function(vrsta, k){
   
   glajeni <- c()
-  for (i in c((k): (length(vrsta) - 1))){ 
-    glajeni[i - k + 1] <- (sum(vrsta[(i-k+1) : i]) / k)
+  for (i in c(1: (length(vrsta) - k))){ 
+    glajeni[i] <- sum(vrsta[i : (k+i-1)]) / k
   }
   
   zacetno_leto <- ceiling(2012 + k/12)
@@ -64,8 +64,112 @@ graf_glajen_gold <- ts.plot(casovna_vrsta,
 
 #d)
 
-MSE <- function(vrsta, k){
-  T <- length(vrsta)
-  napaka <- (1 / (T-k)) * ((vrsta - G(vrsta, k))[k:(T-1)] %*% (vrsta - G(vrsta, k))[k:T-1])
-  return (napaka)
+MSE <- function(vrsta, glajena, k){
+  dolzina <- length(vrsta)
+  napaka <- 0
+  for (i in c((k+1) : dolzina)){
+    napaka <- napaka + (vrsta[i] - glajena[i-k]) ** 2
+  }
+  return (napaka / (dolzina - k))
 }
+
+#e
+
+#Glajenja
+glajena_14 <- G(casovna_vrsta, 14)
+glajena_30 <- G(casovna_vrsta, 30)
+
+#Napovedi
+napoved_7 <- napoved(casovna_vrsta, 7)
+napoved_14 <- napoved(casovna_vrsta, 14)
+napoved_30 <- napoved(casovna_vrsta, 30)
+
+#Srednje kvadratične napake
+skn_7 <- MSE(casovna_vrsta, glajena_7, 7)
+skn_14 <- MSE(casovna_vrsta, glajena_14, 14)
+skn_30 <- MSE(casovna_vrsta, glajena_30, 30)
+
+par(mfrow = c(2,2))
+
+graf_glajen_gold <- ts.plot(casovna_vrsta,
+                            glajena_7,
+                            xlab='Čas',
+                            ylab ="Cena zlata v eurih", 
+                            main = "Drseče povprečje 7",
+                            col = c("gold", "red"), 
+                            lwd = 2)
+
+graf_glajen_gold <- ts.plot(casovna_vrsta,
+                            glajena_14,
+                            xlab='Čas',
+                            ylab ="Cena zlata v eurih", 
+                            main = "Drseče povprečje 14",
+                            col = c("gold", "red"), 
+                            lwd = 2)
+
+graf_glajen_gold <- ts.plot(casovna_vrsta,
+                            glajena_30,
+                            xlab='Čas',
+                            ylab ="Cena zlata v eurih", 
+                            main = "Drseče povprečje 30",
+                            col = c("gold", "red"), 
+                            lwd = 2)
+
+## TRETJA NALOGA
+
+#a)
+
+EG <- function(vrsta, alpha){
+  
+  dolzina <- length(vrsta) 
+  eksp_glajena <- c()
+  eksp_glajena[1] <- vrsta[1]
+  for (i in c(2:dolzina)){
+    eksp_glajena[i] <- alpha * vrsta[i] + (1 - alpha) * eksp_glajena[i-1]
+  }
+  eksp_glajena_vrsta <- ts(eksp_glajena, start = c(2013,1), frequency = 12)
+  return(eksp_glajena_vrsta)
+}
+
+#b)
+
+par(mfrow = c(1,1)) # Samo da mi ne bo več stavilo k prejšnjim trem grafom
+alpha_1 <- 0.60
+eksp_glajena <- EG(casovna_vrsta, alpha_1)
+eksp_napoved <- eksp_glajena[60]
+graf_gold <- ts.plot(casovna_vrsta,
+                     eksp_glajena,
+                     xlab='Čas',
+                     ylab ="Cena zlata v eurih", 
+                     main = "Eksponentno glajenje",
+                     col = c("gold", "red"), 
+                     lwd = 2)
+
+
+#c)
+
+izracun_alpha <- function(vrsta, alpha){
+  dolzina <- length(vrsta)
+  glajena <- EG(vrsta, alpha)
+  napaka <- 0
+  for (i in c(2 : (dolzina - 1))){
+    napaka <- napaka + (vrsta[i] - glajena[i]) ** 2
+  }
+  return (napaka / (dolzina - 1))
+  
+}
+
+optimalen_alpha <- optimize(izracun_alpha, c(0,1), vrsta = casovna_vrsta)
+optimalen_alpha <- optimalen_alpha$minimum
+
+#d)
+
+eksp_opt_glajena <- EG(casovna_vrsta, optimalen_alpha)
+eksp_opt_napoved <- eksp_opt_glajena[60]
+graf_gold <- ts.plot(casovna_vrsta,
+                     eksp_opt_glajena,
+                     xlab='Čas',
+                     ylab ="Cena zlata v eurih", 
+                     main = "Eksponentno glajenje minimalna napaka",
+                     col = c("gold", "lawngreen"), 
+                     lwd = 2)
