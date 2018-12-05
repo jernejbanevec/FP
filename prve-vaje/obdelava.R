@@ -1,6 +1,6 @@
 # PRVA NALOGA
 
-#uvozimo podatke
+#uvozimo podatke oblike csv
 
 podatki_2008 <- read.csv2(file = "prve-vaje/podatki/euribor_2008.csv")
 podatki_2009 <- read.csv2(file = "prve-vaje/podatki/euribor_2009.csv")
